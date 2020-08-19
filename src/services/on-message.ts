@@ -1,4 +1,5 @@
 import TelegramBot from 'node-telegram-bot-api';
+import { commandQueue, ICommand, commands } from './command-queue';
 
 export interface ICommandQueue {
   [key: string]: {
@@ -7,15 +8,10 @@ export interface ICommandQueue {
   };
 }
 
-const commands = ['prereq', 'info'];
 const botName = 'prereqbot';
-
-const commandQueue: ICommandQueue = {};
 
 const emptyCommand = new RegExp(`^/?(${commands.join('|')})(?:@${botName})? *$`);
 const commandWithArg = new RegExp(`^/?(${commands.join('|')})(?:@${botName})? +(.*)$`);
-
-const commandQueueExpiryTime = 100000;
 
 
 export const onMessage = async (bot: TelegramBot, msg: TelegramBot.Message): Promise<void> => {
@@ -30,30 +26,27 @@ export const onMessage = async (bot: TelegramBot, msg: TelegramBot.Message): Pro
 
   const emptyCommandExec = emptyCommand.exec(msgText);
   const commandWithArgExec = commandWithArg.exec(msgText);
-  const commandQueueEntry = commandQueue[fromId];
+  const commandQueueEntry = commandQueue.getEntry(fromId);
 
   if (commandQueueEntry?.command && (emptyCommandExec || commandWithArgExec)) {
-    clearTimeout(commandQueueEntry.timeoutId!);
-    commandQueue[fromId] = { command: '' };
+    commandQueue.clearUser(fromId);
   }
 
   if (emptyCommandExec) {
-    const command = emptyCommandExec[1];
-    const timeoutId = setTimeout(() => {
-      commandQueue[fromId] = { command: ''};
-      bot.sendMessage(chatId, `Command ${command} in queue has expired`);
-    }, commandQueueExpiryTime);
-    commandQueue[fromId] = { command, timeoutId };
+    const command = emptyCommandExec[1] as ICommand;
+    commandQueue.setEntry(fromId, command, (expiredUserId, expiredCommand) =>
+      bot.sendMessage(expiredUserId, `Command ${expiredCommand} in queue has expired`)
+    );
     bot.sendMessage(chatId, `Command ${command} in queue`);
   }
   else if (commandWithArgExec) {
-    const command = commandWithArgExec[1];
+    const command = commandWithArgExec[1] as ICommand;
     const arg = commandWithArgExec[2];
+
     bot.sendMessage(chatId, `Running ${command} with arg ${arg}`);
   }
   else if (commandQueueEntry?.command) {
-    clearTimeout(commandQueue[fromId].timeoutId!);
-    commandQueue[fromId] = { command: '' };
+    commandQueue.clearUser(fromId);
     bot.sendMessage(chatId, `Running command ${commandQueueEntry.command} in queue with arg ${msgText}`);
   }
   else {

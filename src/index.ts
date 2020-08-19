@@ -2,11 +2,11 @@ process.env['NTBA_FIX_319'] = 1 as any;
 
 import admin from 'firebase-admin';
 import TelegramBot from 'node-telegram-bot-api';
-import { config } from 'dotenv';
 
+import { config } from 'dotenv';
 config();
 
-import { onMessage } from './onMessage';
+import { onMessage } from './services/on-message';
 
 let PORT = +process.env.PORT! || 3000;
 const isProd = process.env.NODE_ENV === 'production';
