@@ -1,5 +1,0 @@
-{
-  "firebaseUrl": "your-firebase-url",
-  "herokuUrl": "heroku-url",
-  "botToken": "your-token"
-}

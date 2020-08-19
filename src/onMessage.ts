@@ -1,10 +1,16 @@
 import TelegramBot from 'node-telegram-bot-api';
 
+export interface ICommandQueue {
+  [key: string]: {
+    command: string,
+    timeoutId?: NodeJS.Timeout
+  };
+}
 
 const commands = ['prereq', 'info'];
 const botName = 'prereqbot';
 
-const commandQueue: { [key: string]: { command: string, timeoutId?: NodeJS.Timeout} } = {};
+const commandQueue: ICommandQueue = {};
 
 const emptyCommand = new RegExp(`^/?(${commands.join('|')})(?:@${botName})? *$`);
 const commandWithArg = new RegExp(`^/?(${commands.join('|')})(?:@${botName})? +(.*)$`);
@@ -12,7 +18,7 @@ const commandWithArg = new RegExp(`^/?(${commands.join('|')})(?:@${botName})? +(
 const commandQueueExpiryTime = 100000;
 
 
-export const onMessage = async (bot: TelegramBot, msg: TelegramBot.Message) => {
+export const onMessage = async (bot: TelegramBot, msg: TelegramBot.Message): Promise<void> => {
 
   const msgText = msg.text!;
   const chatId = msg.chat.id;
