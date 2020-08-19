@@ -1,13 +1,6 @@
 import TelegramBot from 'node-telegram-bot-api';
 import { commandQueue, ICommand, commands } from './command-queue';
 
-export interface ICommandQueue {
-  [key: string]: {
-    command: string,
-    timeoutId?: NodeJS.Timeout
-  };
-}
-
 const botName = 'prereqbot';
 
 const emptyCommand = new RegExp(`^/?(${commands.join('|')})(?:@${botName})? *$`);
@@ -16,12 +9,21 @@ const commandWithArg = new RegExp(`^/?(${commands.join('|')})(?:@${botName})? +(
 
 export const onMessage = async (bot: TelegramBot, msg: TelegramBot.Message): Promise<void> => {
 
-  const msgText = msg.text!;
+  const msgText = msg.text;
   const chatId = msg.chat.id;
-  const fromId = msg.from!.id;
+  const fromId = msg.from?.id;
 
-  if (!msgText || msg.reply_to_message) {
-    return
+  // TODO: logging/report system
+  if (msg.reply_to_message) return;
+  if (!msgText ) {
+    console.error(`No message text`);
+    console.log(msg);
+    return;
+  }
+  if (!fromId) {
+    console.error(`No user id`);
+    console.log(msg);
+    return;
   }
 
   const emptyCommandExec = emptyCommand.exec(msgText);
@@ -52,5 +54,7 @@ export const onMessage = async (bot: TelegramBot, msg: TelegramBot.Message): Pro
   else {
     bot.sendMessage(chatId, `Running default command with arg ${msgText}`);
   }
+
+  // TODO: no command found case
 
 }
