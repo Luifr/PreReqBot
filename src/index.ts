@@ -61,6 +61,7 @@ admin.initializeApp({
 });
 // const db = admin.firestore();
 
+
 bot.on('message', async (msg) => {
 	await onMessage(bot, msg);
 });

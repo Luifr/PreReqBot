@@ -9,13 +9,14 @@
   },
   "scripts": {
     "start": "tsc && node dist/index.js",
-    "debug": "node --inspect index.js",
-    "dev": "nodemon index.jx",
+    "dev": "ts-node-dev src/index.ts",
+    "jupiter": "tsc && node dist/scrape.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "Lui",
   "license": "ISC",
   "dependencies": {
+    "@types/cheerio": "^0.22.21",
     "@types/node-telegram-bot-api": "^0.50.2",
     "axios": "^0.18.1",
     "cheerio": "^1.0.0-rc.3",
@@ -25,6 +26,7 @@
     "pdf-parse": "^1.1.1",
     "remove-accents": "^0.4.2",
     "string-similarity": "^4.0.2",
+    "ts-node-dev": "^1.0.0-pre.58",
     "typescript": "^3.9.7"
   },
   "engines": {
