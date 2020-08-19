@@ -90,3 +90,5 @@ dist
 
 # config files
 config/*.json
+
+jupiter
