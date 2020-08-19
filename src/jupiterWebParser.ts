@@ -1,6 +1,7 @@
 import axios from "axios";
 import cheerio from "cheerio";
-import { normaliseString, writeFileSyncRecursive } from './utils';
+import { normaliseString } from './utils/string';
+import { writeFileSyncRecursive } from './utils/file-sytem';
 import { ISubject } from './model';
 
 const webPageGet = async (pageUrl: string) => {
