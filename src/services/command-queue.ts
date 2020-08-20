@@ -1,6 +1,6 @@
 
 interface ICommandQeueEntry {
-  command: ICommand;
+  command: string;
   timeoutId?: NodeJS.Timeout;
   argless?: boolean;
 }
@@ -9,10 +9,10 @@ interface ICommandQueue {
   [userId: number]: ICommandQeueEntry | undefined;
 }
 
-export type ICommand = '' | 'prereq' | 'info' | 'salvarmaterias';
-export const commands = ['prereq', 'info', 'salvarmaterias'];
+export const commands = ['prereq', 'info', 'salvarmaterias', 'list'];
 
 export const arglessCommands = ['salvarmaterias'];
+export const optionalArgCommands = ['list'];
 
 class CommandQueue {
   private queue: ICommandQueue = {};
@@ -27,7 +27,7 @@ class CommandQueue {
     return this.queue[userId];
   }
 
-  setEntry = (userId: number, command: ICommand, argless?: boolean) => {
+  setEntry = (userId: number, command: string, argless?: boolean) => {
     const timeoutId = setTimeout(() => {
       commandQueue.clearUser(userId);
     }, this.commandQueueExpiryTime);

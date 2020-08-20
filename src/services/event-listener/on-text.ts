@@ -1,6 +1,6 @@
 import TelegramBot from 'node-telegram-bot-api';
-import { commandQueue, ICommand, commands, arglessCommands } from './command-queue';
-import { bot } from './telegram-bot';
+import { arglessCommands, commandQueue, commands, optionalArgCommands } from '../command-queue';
+import { runArglessCommand, runCommand } from '../command-execute';
 
 const botName = 'prereqbot';
 
@@ -8,6 +8,7 @@ const emptyCommandRegex = new RegExp(`^/?(${commands.join('|')})(?:@${botName})?
 const commandWithArgRegex = new RegExp(`^/?(${commands.join('|')})(?:@${botName})? +(.*)$`);
 
 const arglessCommandRegex = new RegExp(`${arglessCommands.join('|')}`);
+const optionalArgCommandRegex = new RegExp(`${optionalArgCommands.join('|')}`);
 
 export const onText = async (msg: TelegramBot.Message): Promise<void> => {
 
@@ -36,12 +37,14 @@ export const onText = async (msg: TelegramBot.Message): Promise<void> => {
   }
 
   if (emptyCommandExec) {
-    const command = emptyCommandExec[1] as ICommand;
+    const command = emptyCommandExec[1];
     runArglessCommand(command);
-    commandQueue.setEntry(fromId, command, arglessCommandRegex.test(command));
+    if (!optionalArgCommandRegex.test(command)) {
+      commandQueue.setEntry(fromId, command, arglessCommandRegex.test(command));
+    }
   }
   else if (commandWithArgExec) {
-    const command = commandWithArgExec[1] as ICommand;
+    const command = commandWithArgExec[1];
     const arg = commandWithArgExec[2];
     runCommand(command, arg);
   }
@@ -51,36 +54,9 @@ export const onText = async (msg: TelegramBot.Message): Promise<void> => {
   }
   else {
     // Run default command
-    runCommand('prereq', msgText);
+    runCommand('info', msgText);
   }
 
   // TODO: no command found case
 
-}
-
-const runArglessCommand = (command: ICommand) => {
-  const commandExecuter: { [command: string]: () => void } = {
-    'salvarmaterias': () => {
-      bot.sendMessage('Me mande seu historico escolar!');
-    },
-    'info': () => {
-      bot.sendMessage('Me mande o nome da materia!');
-    },
-    'prereq': () => {
-      bot.sendMessage('Me mande o nome da materia!');
-    }
-  }
-  commandExecuter[command]();
-}
-
-const runCommand = (command: ICommand, arg: string) => {
-  const commandExecuter: { [command: string]: (arg: string) => void } = {
-    'info': (arg?: string) => {
-      bot.sendMessage('info executed with ' + arg);
-    },
-    'prereq': (arg?: string) => {
-      bot.sendMessage('prereq executed with ' + arg);
-    }
-  };
-  commandExecuter[command](arg);
 }

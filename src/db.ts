@@ -1,3 +1,6 @@
+import fs from 'fs';
+import { ISubject } from "./models";
+
 import { config } from 'dotenv';
 config();
 
@@ -17,3 +20,7 @@ admin.initializeApp({
 });
 
 export const db = admin.firestore();
+
+
+export const map = require('../jupiter/maps/bcc.js');
+export const grade: { [code: string]: ISubject } = JSON.parse(fs.readFileSync('./jupiter/grade/bcc.json', 'utf8'));

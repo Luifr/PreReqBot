@@ -3,8 +3,8 @@ process.env['NTBA_FIX_319'] = 1 as any;
 import TelegramBot from 'node-telegram-bot-api';
 
 import { config } from 'dotenv';
-import { onText } from './on-text';
-import { onDocument } from './on-document';
+import { onText } from './event-listener/on-text';
+import { onDocument } from './event-listener/on-document';
 config();
 
 const isProd = process.env.NODE_ENV === 'production';
@@ -37,18 +37,20 @@ class PreReqBot {
 	// private userId: number | undefined;
 	private chatId: number | undefined;
 	private fileId: string | undefined;
+	public chatType: TelegramBot.ChatType | undefined;
 	
 	messageRecieved = (msg: TelegramBot.Message) => {
 		// this.userId = msg.from?.id;
 		this.chatId = msg.chat.id;
 		this.fileId = msg.document?.file_id;
+		this.chatType = msg.chat.type;
 	}
 
-	sendMessage = (text: string) => {
+	sendMessage = (text: string, options?: TelegramBot.SendMessageOptions) => {
 		if (!this.chatId) {
 			throw Error('Chat id not set');
 		}
-		telegramBot.sendMessage(this.chatId, text);
+		telegramBot.sendMessage(this.chatId, text, options ?? {reply_markup: { remove_keyboard: true }});
 	}
 
 	getFile = () => {

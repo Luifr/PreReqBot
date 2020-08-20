@@ -1,10 +1,10 @@
 import TelegramBot from "node-telegram-bot-api";
-import { parsePdf } from "./pdf-parser";
+import { parsePdf } from "../pdf-parser";
 import https from "https";
 
-import { commandQueue } from "./command-queue";
-import { bot } from "./telegram-bot";
-import { UserController } from "../controllers/user";
+import { commandQueue } from "../command-queue";
+import { bot } from "../telegram-bot";
+import { UserController } from "../../controllers/user";
 
 export const onDocument = async (doc: TelegramBot.Message) => {
   if (!doc.from) {
