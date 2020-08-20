@@ -2,10 +2,8 @@ process.env['NTBA_FIX_319'] = 1 as any;
 
 import TelegramBot from 'node-telegram-bot-api';
 
-import { config } from 'dotenv';
 import { onText } from './event-listener/on-text';
 import { onDocument } from './event-listener/on-document';
-config();
 
 const isProd = process.env.NODE_ENV === 'production';
 let PORT = +process.env.PORT! || 3000;

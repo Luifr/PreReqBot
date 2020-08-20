@@ -1,9 +1,6 @@
 import fs from 'fs';
 import { ISubject } from "./models";
 
-import { config } from 'dotenv';
-config();
-
 import admin from 'firebase-admin';
 
 const serviceAccount: { projectId: string, privateKey: string, clientEmail: string } = {

@@ -1,8 +1,4 @@
-import { config } from 'dotenv';
-config();
-
 import './services/telegram-bot';
-
 
 if (
 	!process.env.CLIENT_EMAIL ||
