@@ -1,6 +1,5 @@
 process.env['NTBA_FIX_319'] = 1 as any;
 
-import admin from 'firebase-admin';
 import TelegramBot from 'node-telegram-bot-api';
 
 import { config } from 'dotenv';
@@ -17,20 +16,13 @@ if (
 	!process.env.PRIVATE_KEY ||
 	!process.env.PROJECT_ID ||
 	!process.env.BOT_TOKEN ||
-	!process.env.FIREBASE_URL ||
+	!process.env.DATABASE_NAME ||
 	!process.env.HEROKU_URL
 ) {
 	throw Error('Please set environment variables!');
 }
 
-const serviceAccount: { projectId: string, privateKey: string, clientEmail: string } = {
-	clientEmail: process.env.CLIENT_EMAIL,
-	privateKey: process.env.PRIVATE_KEY,
-	projectId: process.env.PROJECT_ID
-}
-
 const botToken = process.env.BOT_TOKEN;
-const firebaseUrl = process.env.FIREBASE_URL;
 const herokuUrl = process.env.HEROKU_URL;
 
 let bot: TelegramBot;
@@ -43,13 +35,28 @@ else {
 }
 
 
-admin.initializeApp({
-	credential: admin.credential.cert(serviceAccount),
-	databaseURL: firebaseUrl
-});
-// const db = admin.firestore();
-
-
 bot.on('message', async (msg) => {
 	await onMessage(bot, msg);
 });
+
+bot.on('document', (doc) => {
+	onDocument(bot, doc);
+});
+
+import admin from 'firebase-admin';
+import { onDocument } from './services/on-document';
+
+const serviceAccount: { projectId: string, privateKey: string, clientEmail: string } = {
+	clientEmail: process.env.CLIENT_EMAIL!,
+	privateKey: process.env.PRIVATE_KEY!,
+	projectId: process.env.PROJECT_ID!
+}
+
+const databaseName = process.env.DATABASE_NAME;
+
+admin.initializeApp({
+	credential: admin.credential.cert(serviceAccount),
+	databaseURL: `https://${databaseName}.firebaseio.com`
+});
+
+export const db = admin.firestore();

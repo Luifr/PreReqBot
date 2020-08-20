@@ -5,18 +5,18 @@ interface ICommandQeueEntry {
 }
 
 interface ICommandQueue {
-  [userId: number]: ICommandQeueEntry;
+  [userId: number]: ICommandQeueEntry | undefined;
 }
 
-export type ICommand = '' | 'prereq' | 'info';
-export const commands = ['prereq', 'info'];
+export type ICommand = '' | 'prereq' | 'info' | 'salvarmaterias';
+export const commands = ['prereq', 'info', 'salvarmaterias'];
 
 class CommandQueue {
   private queue: ICommandQueue = {};
-  private commandQueueExpiryTime = 4000;
+  private commandQueueExpiryTime = 100000;
 
   clearUser = (userId: number) => {
-    clearTimeout(this.queue[userId].timeoutId!);
+    clearTimeout(this.queue[userId]?.timeoutId!);
     this.queue[userId] = { command: '' };
   }
 

@@ -17,7 +17,7 @@ export const onMessage = async (bot: TelegramBot, msg: TelegramBot.Message): Pro
   if (msg.reply_to_message) return;
   if (!msgText ) {
     console.error(`No message text`);
-    console.log(msg);
+    // console.log(msg);
     return;
   }
   if (!fromId) {
