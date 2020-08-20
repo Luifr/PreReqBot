@@ -44,19 +44,27 @@ const processSubject = (line?: string) => {
 	subjects.push(subject.toLowerCase());
 }
 
-export const parsePdf = async (fileBuffer: Buffer): Promise<string[]> => {
+export const getSubjectsFromPdf = async (fileBuffer: Buffer): Promise<string[]> => {
 	subjects = [];
 
 	const pdfData = await pdf(fileBuffer, options);
 	const pdfText = pdfData.text as string;
 	// fs.writeFileSync("__pdf", pdfText);
 	const lines = pdfText.split('\n');
+	parsePdfSubjects(lines);
 
+	return subjects;
+}
+
+const parsePdfSubjects = (lines: string[]) => {
 	for (let index = 0; index < lines.length; index++) {
+		// While it is not a semester begin line, skip to the next line
 		if (!lines[index].endsWith('Semestre')) continue;
 		index++;
+		// While the current line is does not start with _______
+		// The semester is not over, so keep precessing subjects
 		while (!lines[index].startsWith('________')) {
-			let lineToProcess: string;
+			let lineToProcess = '';
 			// Hole subject sline
 			if (lines[index].match(/^\w{7} /)) {
 				lineToProcess = lines[index];
@@ -72,10 +80,8 @@ export const parsePdf = async (fileBuffer: Buffer): Promise<string[]> => {
 				}
 				lineToProcess += lines[index];
 			}
-			processSubject(lineToProcess!);
+			processSubject(lineToProcess);
 			index++;
 		}
 	}
-
-	return subjects;
 }

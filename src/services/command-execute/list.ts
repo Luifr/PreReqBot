@@ -2,14 +2,14 @@ import { bot } from "../telegram-bot";
 import { grade } from "../../db";
 
 
-export const listSubjects = (arg?: string) => {
+export const listSubjects = (filter?: string) => {
   if (bot.chatType !== 'private') {
     bot.sendMessage('Esse comando só funciona no privado');
     return;
   }
   let subjects = Object.values(grade);
-  if (arg) {
-    const likeRegex = new RegExp(arg);
+  if (filter) {
+    const likeRegex = new RegExp(filter);
     subjects = subjects.filter((subject) => likeRegex.test(subject.normalisedName))
   }
   

@@ -3,8 +3,8 @@ import { buildPreReqMessage } from "../../helpers/subject";
 import { map, grade } from "../../db";
 
 
-export const prereqCommand = (arg: string) => {
-  const subjectCode = map[arg];
+export const prereqCommand = (subjectName: string) => {
+  const subjectCode = map[subjectName];
   if (!subjectCode) {
     bot.sendMessage('Materia não encontrada');
   }

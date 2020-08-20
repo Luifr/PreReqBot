@@ -3,8 +3,8 @@ import { buildPreReqMessage, buildPosReqMessage } from "../../helpers/subject";
 import { grade, map } from "../../db";
 
 
-export const infoCommand = (arg: string) => {
-  const subjectCode = map[arg];
+export const infoCommand = (subjectName: string) => {
+  const subjectCode = map[subjectName];
   if (!subjectCode) {
     bot.sendMessage('Materia não encontrada');
   }

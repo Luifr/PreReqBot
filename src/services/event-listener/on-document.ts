@@ -1,5 +1,5 @@
 import TelegramBot from "node-telegram-bot-api";
-import { parsePdf } from "../pdf-parser";
+import { getSubjectsFromPdf } from "../pdf-parser";
 import https from "https";
 
 import { commandQueue } from "../command-queue";
@@ -19,7 +19,7 @@ export const onDocument = async (doc: TelegramBot.Message) => {
   commandQueue.clearUser(doc.from.id);
 
   const fileBuffer = await getFileBufferFromTelegram();
-  const subjectsDone = await parsePdf(fileBuffer);
+  const subjectsDone = await getSubjectsFromPdf(fileBuffer);
 
   if (subjectsDone === null) {
     bot.sendMessage("Problemas com o documento, ele é realmente seu resumo escolar?");
