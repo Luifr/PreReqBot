@@ -1,18 +1,14 @@
+import { Command } from '../models/command';
 
 interface ICommandQeueEntry {
-  command: string;
+  command: Command | '';
   timeoutId?: NodeJS.Timeout;
-  argless?: boolean;
 }
 
 interface ICommandQueue {
   [userId: number]: ICommandQeueEntry | undefined;
 }
 
-export const commands = ['prereq', 'info', 'salvarmaterias', 'list'];
-
-export const arglessCommands = ['salvarmaterias'];
-export const optionalArgCommands = ['list'];
 
 class CommandQueue {
   private queue: ICommandQueue = {};
@@ -27,11 +23,11 @@ class CommandQueue {
     return this.queue[userId];
   }
 
-  setEntry = (userId: number, command: string, argless?: boolean) => {
+  setEntry = (userId: number, command: Command) => {
     const timeoutId = setTimeout(() => {
       commandQueue.clearUser(userId);
     }, this.commandQueueExpiryTime);
-    this.queue[userId] = { command, timeoutId, argless };
+    this.queue[userId] = { command, timeoutId };
   }
 
 }

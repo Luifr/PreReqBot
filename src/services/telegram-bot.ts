@@ -32,13 +32,13 @@ telegramBot.on('document', async (doc) => {
 
 class PreReqBot {
 
-	// private userId: number | undefined;
+	public userId: number | undefined;
 	private chatId: number | undefined;
 	private fileId: string | undefined;
 	public chatType: TelegramBot.ChatType | undefined;
 	
 	messageRecieved = (msg: TelegramBot.Message) => {
-		// this.userId = msg.from?.id;
+		this.userId = msg.from?.id;
 		this.chatId = msg.chat.id;
 		this.fileId = msg.document?.file_id;
 		this.chatType = msg.chat.type;
@@ -60,6 +60,7 @@ class PreReqBot {
 
 }
 
+// TODO: Exportar isso assim vai dar ruim quando duas ou mais pessoas estiverem falando com o bot ao mesmo tempo
 export const bot = new PreReqBot();
 
 console.log('Prereq started running');

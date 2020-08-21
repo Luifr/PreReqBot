@@ -1,11 +1,12 @@
 import TelegramBot from 'node-telegram-bot-api';
-import { arglessCommands, commandQueue, commands, optionalArgCommands } from '../command-queue';
+import { allCommands, ArgCommand, arglessCommands, Command, optionalArgCommands } from '../../models/command';
 import { runArglessCommand, runCommand } from '../command-execute';
+import { commandQueue } from '../command-queue';
 
 const botName = 'prereqbot';
 
-const emptyCommandRegex = new RegExp(`^/?(${commands.join('|')})(?:@${botName})? *$`);
-const commandWithArgRegex = new RegExp(`^/?(${commands.join('|')})(?:@${botName})? +(.*)$`);
+const emptyCommandRegex = new RegExp(`^/?(${allCommands.join('|')})(?:@${botName})? *$`);
+const commandWithArgRegex = new RegExp(`^/?(${allCommands.join('|')})(?:@${botName})? +(.*)$`);
 
 const arglessCommandRegex = new RegExp(`${arglessCommands.join('|')}`);
 const optionalArgCommandRegex = new RegExp(`${optionalArgCommands.join('|')}`);
@@ -37,20 +38,30 @@ export const onText = async (msg: TelegramBot.Message): Promise<void> => {
   }
 
   if (emptyCommandExec) {
-    const command = emptyCommandExec[1];
+    const command = emptyCommandExec[1] as Command;
     runArglessCommand(command);
     if (!optionalArgCommandRegex.test(command)) {
-      commandQueue.setEntry(fromId, command, arglessCommandRegex.test(command));
+      commandQueue.setEntry(fromId, command);
     }
   }
   else if (commandWithArgExec) {
-    const command = commandWithArgExec[1];
+    const command = commandWithArgExec[1] as Command;
     const arg = commandWithArgExec[2];
-    runCommand(command, arg);
+    // If the user sent a argless command with argument, run it without the argument
+    // Exemple: `/help hi` should be `/help` hi has no effect
+    if (arglessCommandRegex.test(command)) {
+      runArglessCommand(command);
+      if (!optionalArgCommandRegex.test(command)) {
+        commandQueue.setEntry(fromId, command);
+      }
+    }
+    else {
+      runCommand(command as ArgCommand, arg);
+    }
   }
-  else if (commandQueueEntry?.command && !commandQueueEntry.argless) {
+  else if (commandQueueEntry?.command && !arglessCommandRegex.test(commandQueueEntry.command)) {
     commandQueue.clearUser(fromId);
-    runCommand(commandQueueEntry.command, msgText);
+    runCommand(commandQueueEntry.command as ArgCommand, msgText);
   }
   else {
     // Run default command

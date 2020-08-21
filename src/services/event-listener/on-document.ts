@@ -21,8 +21,9 @@ export const onDocument = async (doc: TelegramBot.Message) => {
   const fileBuffer = await getFileBufferFromTelegram();
   const subjectsDone = await getSubjectsFromPdf(fileBuffer);
 
-  if (subjectsDone === null) {
-    bot.sendMessage("Problemas com o documento, ele é realmente seu resumo escolar?");
+  if (subjectsDone.length === 0) {
+    const contactText = process.env.DEV_CONTACT ? `Se o problema persistir me contate: ${process.env.DEV_CONTACT}` : '';
+    bot.sendMessage(`Problemas com o documento\nEsse é realmente seu resumo escolar?\n${contactText}`);
     return;
   }
 

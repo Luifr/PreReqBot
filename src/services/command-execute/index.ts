@@ -3,22 +3,27 @@ import { normaliseString } from "../../helpers/string";
 import { listSubjects } from "./list";
 import { infoCommand } from "./info";
 import { prereqCommand } from "./prereq";
+import { Command, ArgCommand } from '../../models/command';
+import { helpCommand } from './help';
+import { showMateriasAprovadas } from './materias-aprovadas';
 
-export const runArglessCommand = (command: string) => {
-  const commandExecuter: { [command: string]: (() => void) | undefined } = {
-    'info': () => bot.sendMessage('Me mande o nome da materia!'),
-    'prereq': () => bot.sendMessage('Me mande o nome da materia!'),
-    'salvarmaterias': () => bot.sendMessage('Me mande seu historico escolar!'),
-    'list': listSubjects
+export const runArglessCommand = (command: Command) => {
+  const commandExecuter: { [command in Command]: () => void } = {
+    info: () => bot.sendMessage('Me mande o nome da materia!'),
+    prereq: () => bot.sendMessage('Me mande o nome da materia!'),
+    salvarmaterias: () => bot.sendMessage('Me mande seu historico escolar!'),
+    list: listSubjects,
+    materiasaprovadas: showMateriasAprovadas,
+    help: helpCommand
   }
-  commandExecuter[command]?.();
+  commandExecuter[command]();
 }
 
-export const runCommand = (command: string, arg: string) => {
-  const commandExecuter: { [command: string]: ((arg: string) => void) | undefined } = {
-    'info': infoCommand,
-    'prereq': prereqCommand,
-    'list': listSubjects
+export const runCommand = (command: ArgCommand, arg: string) => {
+  const commandExecuter: { [command in ArgCommand]: (arg: string) => void } = {
+    info: infoCommand,
+    prereq: prereqCommand,
+    list: listSubjects
   };
-  commandExecuter[command]?.(normaliseString(arg));
+  commandExecuter[command](normaliseString(arg));
 }
