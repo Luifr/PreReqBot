@@ -1,7 +1,7 @@
-import fs from 'fs';
 import { ISubject } from "./models";
 
 import admin from 'firebase-admin';
+import { readJsonFile } from './helpers/file-sytem';
 
 const serviceAccount: { projectId: string, privateKey: string, clientEmail: string } = {
 	clientEmail: process.env.CLIENT_EMAIL!,
@@ -18,6 +18,5 @@ admin.initializeApp({
 
 export const db = admin.firestore();
 
-
 export const map = require('../jupiter/maps/bcc.js');
-export const grade: { [code: string]: ISubject } = JSON.parse(fs.readFileSync('./jupiter/grade/bcc.json', 'utf8'));
+export const grade: { [code: string]: ISubject } = readJsonFile('./jupiter/grade/bcc');

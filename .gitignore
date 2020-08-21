@@ -95,3 +95,5 @@ config/*.json
 __*
 
 jupiter
+
+launch.json
