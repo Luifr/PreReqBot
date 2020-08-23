@@ -1,6 +1,5 @@
-import { bot } from "../telegram-bot";
-import { grade } from "../../db";
-
+import { bot } from '../telegram-bot';
+import { grade } from '../../db';
 
 export const listSubjects = (filter?: string) => {
   if (bot.chatType !== 'private') {
@@ -10,19 +9,19 @@ export const listSubjects = (filter?: string) => {
   let subjects = Object.values(grade);
   if (filter) {
     const likeRegex = new RegExp(filter);
-    subjects = subjects.filter((subject) => likeRegex.test(subject.normalisedName))
+    subjects = subjects.filter((subject) => likeRegex.test(subject.normalisedName));
   }
-  
+
   const subjectsKeyboard = subjects.map(subject => [{ text: subject.name }]);
 
-  const listText = subjectsKeyboard.length === 0 
-  ? 'Não encontrei nenhuma materia com esse filtro'
-  : 'Ai estão as materias do seu curso';
+  const listText = subjectsKeyboard.length === 0 ?
+    'Não encontrei nenhuma materia com esse filtro' :
+    'Ai estão as materias do seu curso';
 
   bot.sendMessage(listText, {
     reply_markup: {
       keyboard: subjectsKeyboard,
-      one_time_keyboard: true,
+      one_time_keyboard: true
     }
   });
-}
+};

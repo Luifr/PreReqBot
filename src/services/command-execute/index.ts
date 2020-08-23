@@ -1,8 +1,8 @@
-import { bot } from "../telegram-bot";
-import { normaliseString } from "../../helpers/string";
-import { listSubjects } from "./list";
-import { infoCommand } from "./info";
-import { prereqCommand } from "./prereq";
+import { bot } from '../telegram-bot';
+import { normaliseString } from '../../helpers/string';
+import { listSubjects } from './list';
+import { infoCommand } from './info';
+import { prereqCommand } from './prereq';
 import { Command, ArgCommand } from '../../models/command';
 import { helpCommand } from './help';
 import { showMateriasAprovadas } from './materias-aprovadas';
@@ -15,9 +15,9 @@ export const runArglessCommand = (command: Command) => {
     list: listSubjects,
     materiasaprovadas: showMateriasAprovadas,
     help: helpCommand
-  }
+  };
   commandExecuter[command]();
-}
+};
 
 export const runCommand = (command: ArgCommand, arg: string) => {
   const commandExecuter: { [command in ArgCommand]: (arg: string) => void } = {
@@ -26,4 +26,4 @@ export const runCommand = (command: ArgCommand, arg: string) => {
     list: listSubjects
   };
   commandExecuter[command](normaliseString(arg));
-}
+};

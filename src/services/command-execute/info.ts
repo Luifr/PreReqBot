@@ -1,7 +1,6 @@
-import { bot } from "../telegram-bot";
-import { buildPreReqMessage, buildPosReqMessage } from "../../helpers/subject";
-import { grade, map } from "../../db";
-
+import { bot } from '../telegram-bot';
+import { buildPreReqMessage, buildPosReqMessage } from '../../helpers/subject';
+import { grade, map } from '../../db';
 
 export const infoCommand = (subjectName: string) => {
   const subjectCode = map[subjectName];
@@ -23,4 +22,4 @@ export const infoCommand = (subjectName: string) => {
 
     bot.sendMessage(infoText);
   }
-}
+};

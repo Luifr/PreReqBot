@@ -1,5 +1,11 @@
 import TelegramBot from 'node-telegram-bot-api';
-import { allCommands, ArgCommand, arglessCommands, Command, optionalArgCommands } from '../../models/command';
+import {
+  allCommands,
+  ArgCommand,
+  arglessCommands,
+  Command,
+  optionalArgCommands
+} from '../../models/command';
 import { runArglessCommand, runCommand } from '../command-execute';
 import { commandQueue } from '../command-queue';
 
@@ -12,19 +18,18 @@ const arglessCommandRegex = new RegExp(`${arglessCommands.join('|')}`);
 const optionalArgCommandRegex = new RegExp(`${optionalArgCommands.join('|')}`);
 
 export const onText = async (msg: TelegramBot.Message): Promise<void> => {
-
   const msgText = msg.text;
   const fromId = msg.from?.id;
 
   // TODO: logging/report system
   if (msg.reply_to_message) return;
   if (!msgText) {
-    console.error(`No message text`);
+    console.error('No message text');
     console.log(msg);
     return;
   }
   if (!fromId) {
-    console.error(`No user id`);
+    console.error('No user id');
     console.log(msg);
     return;
   }
@@ -69,4 +74,4 @@ export const onText = async (msg: TelegramBot.Message): Promise<void> => {
   }
 
   // TODO: no command found case
-}
+};

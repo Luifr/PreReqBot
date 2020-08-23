@@ -9,7 +9,6 @@ interface ICommandQueue {
   [userId: number]: ICommandQeueEntry | undefined;
 }
 
-
 class CommandQueue {
   private queue: ICommandQueue = {};
   private commandQueueExpiryTime = 100000;
@@ -29,7 +28,6 @@ class CommandQueue {
     }, this.commandQueueExpiryTime);
     this.queue[userId] = { command, timeoutId };
   }
-
 }
 
 export const commandQueue = new CommandQueue();

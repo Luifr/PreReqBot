@@ -15,11 +15,11 @@ export const writeFileSyncRecursive = (filename: string, content: string, charse
   });
 
   fs.writeFileSync(filename, content, charset);
-}
+};
 
 export const readJsonFile = (jsonPath: string) => {
   if (!jsonPath.endsWith('.json')) {
     jsonPath += '.json';
   }
   return JSON.parse(fs.readFileSync(jsonPath, 'utf8'));
-}
+};
