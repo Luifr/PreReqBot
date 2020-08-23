@@ -1,8 +1,8 @@
-import { bot } from '../telegram-bot';
+import { grade, map } from '../../db';
 import { buildPreReqMessage } from '../../helpers/subject';
-import { map, grade } from '../../db';
+import { PreReqBot } from '../telegram-bot';
 
-export const prereqCommand = (subjectName: string) => {
+export const prereqCommand = (bot: PreReqBot, subjectName: string) => {
   const subjectCode = map[subjectName];
   if (!subjectCode) {
     bot.sendMessage('Materia não encontrada');

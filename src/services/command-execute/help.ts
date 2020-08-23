@@ -1,6 +1,6 @@
-import { bot } from '../telegram-bot';
+import { PreReqBot } from '../telegram-bot';
 
-export const helpCommand = () => {
+export const helpCommand = (bot: PreReqBot) => {
   const contact = process.env.DEV_CONTACT;
   const contactText = contact ? `Qualquer duvida ou sugestão, so chamar: ${contact}` : '';
   /* eslint-disable max-len */

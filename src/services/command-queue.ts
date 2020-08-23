@@ -11,7 +11,8 @@ interface ICommandQueue {
 
 class CommandQueue {
   private queue: ICommandQueue = {};
-  private commandQueueExpiryTime = 100000;
+  // 2 minutes to expire command in queue
+  private commandQueueExpiryTime = 120000;
 
   clearUser = (userId: number) => {
     clearTimeout(this.queue[userId]?.timeoutId!);

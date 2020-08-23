@@ -1,12 +1,12 @@
 import TelegramBot from 'node-telegram-bot-api';
 import { getSubjectsFromPdf } from '../pdf-parser';
-import https from 'https';
 
 import { commandQueue } from '../command-queue';
-import { bot } from '../telegram-bot';
+import { PreReqBot } from '../telegram-bot';
 import { UserController } from '../../controllers/user';
+import { downloadFileFromUrl } from '../../helpers/https';
 
-export const onDocument = async (doc: TelegramBot.Message) => {
+export const onDocument = async (bot: PreReqBot, doc: TelegramBot.Message) => {
   if (!doc.from) {
     return; // TODO: show error?
   }
@@ -18,7 +18,7 @@ export const onDocument = async (doc: TelegramBot.Message) => {
 
   commandQueue.clearUser(doc.from.id);
 
-  const fileBuffer = await getFileBufferFromTelegram();
+  const fileBuffer = await getFileBufferFromTelegram(bot);
   const subjectsDone = await getSubjectsFromPdf(fileBuffer);
 
   if (subjectsDone.length === 0) {
@@ -37,7 +37,7 @@ export const onDocument = async (doc: TelegramBot.Message) => {
   bot.sendMessage('Materias salvas!');
 };
 
-const getFileBufferFromTelegram = async () => {
+const getFileBufferFromTelegram = async (bot: PreReqBot) => {
   const file = await bot.getFile();
   if (!file.file_path?.endsWith('.pdf')) {
     bot.sendMessage('Isso nao parece ser seu resumo escolar');
@@ -48,16 +48,4 @@ const getFileBufferFromTelegram = async () => {
       'https://api.telegram.org/file/bot' + process.env.BOT_TOKEN + '/' + file.file_path
     );
   }
-};
-
-const downloadFileFromUrl = (url: string): Promise<Buffer> => {
-  return new Promise<Buffer>((resolve) => {
-    // Request telegram image in url
-    https.get(url, (response) => {
-      const data: Buffer[] = [];
-      response.on('data', chunk => data.push(chunk));
-      // On data end, resolve promise with all data chunks
-      response.on('end', () => resolve(Buffer.concat(data)));
-    });
-  });
 };

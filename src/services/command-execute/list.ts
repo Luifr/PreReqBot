@@ -1,7 +1,7 @@
-import { bot } from '../telegram-bot';
 import { grade } from '../../db';
+import { PreReqBot } from '../telegram-bot';
 
-export const listSubjects = (filter?: string) => {
+export const listSubjects = (bot: PreReqBot, filter?: string) => {
   if (bot.chatType !== 'private') {
     bot.sendMessage('Esse comando só funciona no privado');
     return;

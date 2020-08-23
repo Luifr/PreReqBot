@@ -1,9 +1,9 @@
-import { bot } from '../telegram-bot';
 import { UserController } from '../../controllers/user';
 import { grade } from '../../db';
 import { IUser } from '../../models/user';
+import { PreReqBot } from '../telegram-bot';
 
-export const showMateriasAprovadas = async () => {
+export const showMateriasAprovadas = async (bot: PreReqBot) => {
   const user = await UserController.get(bot.userId!) as IUser;
   if (!user.subjectsDone || user.subjectsDone.length === 0) {
     bot.sendMessage('Me mande seu resumo escolar pelo comando /salvarmaterias');

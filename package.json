@@ -16,7 +16,15 @@
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "Lui",
-  "license": "ISC",
+  "license": "MIT",
+  "husky": {
+    "hooks": {
+      "pre-commit": "tsc && npm run lint"
+    }
+  },
+  "engines": {
+    "node": "10.15.3"
+  },
   "dependencies": {
     "@types/cheerio": "^0.22.21",
     "@types/dotenv": "^8.2.0",
@@ -33,16 +41,7 @@
     "remove-accents": "^0.4.2",
     "string-similarity": "^4.0.2",
     "ts-node-dev": "^1.0.0-pre.58",
-    "typescript": "^3.9.7"
-  },
-  "husky": {
-    "hooks": {
-      "pre-commit": "npm run lint",
-      "pre-push": "npm run lint"
-    }
-  },
-  "engines": {
-    "node": "10.15.3"
+    "typescript": "^4.0.2"
   },
   "devDependencies": {
     "@typescript-eslint/eslint-plugin": "^3.9.1",
