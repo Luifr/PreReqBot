@@ -2,7 +2,9 @@ import { PreReqBot } from '../telegram-bot';
 
 export const helpCommand = (bot: PreReqBot) => {
   const contact = process.env.DEV_CONTACT;
-  const contactText = contact ? `Qualquer duvida ou sugestão, so chamar: ${contact}` : '';
+  const contactText = contact ?
+    `Qualquer duvida ou sugestão, so chamar: ${contact}` :
+    '';
   /* eslint-disable max-len */
   bot.sendMessage(
     'Olar eu posso te mostrar informações uteis sobre as materias do seu curso!\n' +
